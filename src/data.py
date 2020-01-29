@@ -21,6 +21,7 @@ def __load_image(path):
 # return[0] is raw image data
 # return[1] is the class name
 # return[2] is a tuple with given pose data
+# return[3] is file name with path
 def __load_folder(folder, class_name):
     image_dict = dict()
     path = ROOT_DIR + '\\dataset\\' + folder + '\\' + class_name + '\\'
@@ -49,12 +50,19 @@ def __load_folder(folder, class_name):
 
                 out.append((image_dict[lines[i * 2][2:-1]],
                             class_name,
-                            pose))
+                            pose,
+                            path+lines[i * 2][2:-1]))
 
     return out
 
 
 # set mode to 'all', 'test', 'train', or 'db'
+# 'all' returns a dict of all datasets
+# everything else returns a list of tuples where:
+# return[0] is raw image data
+# return[1] is the class name
+# return[2] is a tuple with given pose data
+# return[3] is file name with path
 def load_dataset(mode='all'):
     classes = ['ape', 'benchvise', 'cam', 'cat', 'duck']
     # Split string with ', ' and put casted ints into list
