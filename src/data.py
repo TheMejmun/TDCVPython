@@ -3,6 +3,7 @@ import numpy as np
 import glob
 import re
 import os
+from norm import normalize
 
 # TODO put dataset folder into project root
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -31,7 +32,7 @@ def __load_folder(folder, class_name):
         # Is image
         if re.match('.*\.png$', f):
             # Put images into dict with file name (without path) as index
-            image_dict[f[len(path):]] = __load_image(f)
+            image_dict[f[len(path):]] = normalize(__load_image(f))
 
     out = list()
 
@@ -51,7 +52,7 @@ def __load_folder(folder, class_name):
                 out.append((image_dict[lines[i * 2][2:-1]],
                             class_name,
                             pose,
-                            path+lines[i * 2][2:-1]))
+                            path + lines[i * 2][2:-1]))
 
     return out
 
@@ -117,3 +118,9 @@ def load_dataset(mode='all'):
 
     else:
         print('Error: Unknown dataset loading mode')
+
+
+# TESTING
+if __name__ == '__main__':  # Only execute if called
+    db = load_dataset('db')
+    print()

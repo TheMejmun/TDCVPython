@@ -2,19 +2,14 @@ import numpy as np
 
 
 def __zero_mean(image):
-    return image - np.mean(image, axis=(0, 1))
+    mean=np.mean(image, axis=(0, 1))
+    # print('Mean: ', mean)
+    return image - mean
 
 
 def __unit_variance(image):
-    std = (0., 0., 0.)
-
-    for y in range(image.shape[0]):
-        for x in range(image.shape[1]):
-            print(image[y, x] ** 2)
-            std += (image[y, x] ** 2)
-
-    std /= image.shape[0] * image.shape[0]
-    print('Standard deviation: ', std)
+    std = np.std(image, axis=(0, 1))
+    # print('Standard deviation: ', std)
     return image / std
 
 
@@ -38,8 +33,3 @@ if __name__ == '__main__':  # Only execute if called
           [1, 2, 3],
           [1, 2, 3]]]
     )
-    print(image, '\n')
-
-    print(__zero_mean(image), '\n')
-
-    print(normalize(image))
