@@ -21,7 +21,7 @@ def __load_image(path):
 # Returns a list of tuples
 # return[0] is raw image data
 # return[1] is the class name
-# return[2] is a tuple with given pose data
+# return[2] is a np array with given pose data
 # return[3] is file name with path
 def __load_folder(folder, class_name):
     image_dict = dict()
@@ -44,10 +44,10 @@ def __load_folder(folder, class_name):
 
             for i in range(len(lines) // 2):
                 pose_strings = lines[i * 2 + 1].split()
-                pose = (float(pose_strings[0]),
-                        float(pose_strings[1]),
-                        float(pose_strings[2]),
-                        float(pose_strings[3]))
+                pose = np.array((float(pose_strings[0]),
+                                 float(pose_strings[1]),
+                                 float(pose_strings[2]),
+                                 float(pose_strings[3])))
 
                 out.append((image_dict[lines[i * 2][2:-1]],
                             class_name,
@@ -62,9 +62,10 @@ def __load_folder(folder, class_name):
 # everything else returns a list of tuples where:
 # return[0] is raw image data
 # return[1] is the class name
-# return[2] is a tuple with given pose data
+# return[2] is a np array with given pose data
 # return[3] is file name with path
 def load_dataset(mode='all'):
+
     classes = ['ape', 'benchvise', 'cam', 'cat', 'duck']
     # Split string with ', ' and put casted ints into list
     training_split = [int(i) for i in open(ROOT_DIR + '\\dataset\\real\\training_split.txt').read().split(sep=', ')]
