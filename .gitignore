@@ -128,6 +128,10 @@ dmypy.json
 # Dataset
 dataset/*
 
+#Metadata
+.idea/misc.xml
+.idea/TDCVPyhton.iml
+
 # ===========================================================================
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
