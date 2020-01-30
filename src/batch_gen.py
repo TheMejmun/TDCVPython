@@ -25,8 +25,10 @@ def __find_nn(a, b_set):
     for b in b_set:
         # Same class only
         if a[1] == b[1]:
-            # Euclidean distance of poses
-            d = np.linalg.norm(b[2] - a[2])
+
+            # Angular distance
+            # Formula given in exercise
+            d = 2 * np.arccos(np.abs(np.dot(b[2], a[2])))
             if d < match_d:
                 match = b
                 match_d = d
