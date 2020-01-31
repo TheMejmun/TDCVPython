@@ -21,7 +21,7 @@ def generate_triplet_batch(s_train, s_db, batch_size):
 
 def __find_nn(a, b_set):
     match = None
-    match_d = 2 ** 29  # Just some very high number
+    match_d = float('inf')
     for b in b_set:
         # Same class only
         if a[1] == b[1]:
