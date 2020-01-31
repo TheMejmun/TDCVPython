@@ -29,7 +29,7 @@ def train():
     net = Net().double()
     optimizer = optim.Adam(net.parameters(), lr=1e-3)
 
-    for run in range(RUNS):
+    for run in range(1, RUNS + 1):
         torch.save(net.state_dict(), f='state_dict.pth')
 
         batch = generate_triplet_batch(s_train, s_db, BATCH_SIZE)
@@ -40,7 +40,7 @@ def train():
         for i in batch:
             results.append(net(i[0].view(1, 3, 64, 64)))
 
-        loss = l_triplets(results) + l_pairs(results)
+        loss = l_triplets(results, s_train) + l_pairs(results)
 
         if run % 10 == 0:
             print('Run: ', run, '\tLoss: ', float(loss))
@@ -57,7 +57,7 @@ def train():
         optimizer.step()
 
     writer.close()
-    print('Finished in ',  str(datetime.timedelta(seconds=round(time() - start_t, 2))), 's\n')
+    print('Finished in ', str(datetime.timedelta(seconds=time() - start_t)), 's\n')
 
 
 if __name__ == '__main__':  # Only execute if called

@@ -90,5 +90,5 @@ def test(run=0, s_test=None, s_db=None):
                       global_step=run)
 
     writer.close()
-    print('Finished in ',  str(datetime.timedelta(seconds=round(time() - start_t, 2))), 's\n')
+    print('Finished in ',  str(datetime.timedelta(seconds=time() - start_t)), 's\n')
 
