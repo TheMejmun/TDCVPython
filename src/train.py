@@ -11,7 +11,7 @@ from test import test
 
 RUNS = 10000
 # batch size gets multiplied by 3 later
-BATCH_SIZE = 50
+BATCH_SIZE = 25
 
 
 def train():
@@ -30,6 +30,7 @@ def train():
     optimizer = optim.Adam(net.parameters(), lr=1e-3)
 
     for run in range(RUNS):
+        torch.save(net.state_dict(), f='state_dict.pth')
 
         batch = generate_triplet_batch(s_train, s_db, BATCH_SIZE)
         results = list()
@@ -48,14 +49,15 @@ def train():
                               global_step=run)
 
         if run % 1000 == 0:
+            writer.close()
             test(run, s_test=datasets['test'], s_db=datasets['db'])
+            writer = SummaryWriter('runs/train')
 
         loss.backward()
         optimizer.step()
 
-        torch.save(net.state_dict(), 'state_dict')
-
-    print('Finished in ', round(time() - start_t, 2), 's\n')
+    writer.close()
+    print('Finished in ',  str(datetime.timedelta(seconds=round(time() - start_t, 2))), 's\n')
 
 
 if __name__ == '__main__':  # Only execute if called

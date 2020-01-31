@@ -3,6 +3,7 @@ import torch
 from data import load_dataset
 import numpy as np
 from nn import Net
+import datetime
 from torch.utils.tensorboard import SummaryWriter
 
 
@@ -22,7 +23,7 @@ def test(run=0, s_test=None, s_db=None):
     print('Loading NN')
     net = Net().double()
     try:
-        net.load_state_dict(torch.load('state_dict'))
+        net.load_state_dict(torch.load('state_dict.pth'))
     except FileNotFoundError:
         print('State dict not found')
     net.eval()
@@ -88,6 +89,6 @@ def test(run=0, s_test=None, s_db=None):
                       scalar_value=lt180 / len(s_test),
                       global_step=run)
 
-    print('Finished in ', round(time() - start_t, 2), 's\n')
+    writer.close()
+    print('Finished in ',  str(datetime.timedelta(seconds=round(time() - start_t, 2))), 's\n')
 
-    return
