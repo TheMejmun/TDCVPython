@@ -5,19 +5,12 @@ import numpy as np
 from nn import Net
 import datetime
 from torch.utils.tensorboard import SummaryWriter
+from train import RUN_NAME
 
 
-def test(run=0, s_test=None, s_db=None):
+def test(run=0, s_test=load_dataset('train'), s_db=load_dataset('db'), writer=SummaryWriter('runs/' + RUN_NAME)):
     start_t = time()
     print('\nTesting')
-
-    writer = SummaryWriter('runs/r1000b25dm')
-
-    # Load data
-    if s_test is None:
-        s_test = load_dataset('train')
-    if s_db is None:
-        s_db = load_dataset('db')
 
     # Load NN
     print('Loading NN')
@@ -73,9 +66,6 @@ def test(run=0, s_test=None, s_db=None):
             if degrees < 180:
                 lt180 += 1
 
-    writer.add_scalar(tag='class_matches',
-                      scalar_value=class_match_count / len(s_test),
-                      global_step=run)
     writer.add_scalar(tag='match_within_10_degrees',
                       scalar_value=lt10 / len(s_test),
                       global_step=run)
@@ -89,6 +79,4 @@ def test(run=0, s_test=None, s_db=None):
                       scalar_value=lt180 / len(s_test),
                       global_step=run)
 
-    writer.close()
-    print('Finished in ',  str(datetime.timedelta(seconds=time() - start_t)), 's\n')
-
+    print('Finished in ', str(datetime.timedelta(seconds=time() - start_t)), 's\n')
