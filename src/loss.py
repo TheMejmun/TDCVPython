@@ -26,7 +26,7 @@ def l_pairs(t):
 
 # Proposed by
 # Sergey Zakharov, Wadim Kehl, Benjamin Planche, Andreas Hutter, Slobodan Ilic
-def __dynamic_margin(anchor, pusher, n=2 * np.pi):
+def __dynamic_margin(anchor, pusher, n=np.pi):
     # If same class
     if anchor[1] == pusher[1]:
         return 2 * np.arccos(np.clip(np.abs(np.dot(anchor[2], pusher[2])), a_min=-1, a_max=1))

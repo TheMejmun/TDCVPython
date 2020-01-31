@@ -9,17 +9,17 @@ from torch.utils.tensorboard import SummaryWriter
 import datetime
 from test import test
 
-RUNS = 1000
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
-RUN_NAME = 'r100b25dm2pi'
+RUNS = 100000 // BATCH_SIZE
+RUN_NAME = 'r10000b25dmpi'
 
 
 def train():
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs/' + RUN_NAME)
+    writer = SummaryWriter('runs2/' + RUN_NAME)
 
     # Load data
     datasets = load_dataset('all')
@@ -46,18 +46,19 @@ def train():
             results.append(net(i[0].view(1, 3, 64, 64)))
 
         loss = l_triplets(results, batch) + l_pairs(results)
+        # loss = l_triplets(results) + l_pairs(results)
         loss_sum += float(loss)
 
-        if run % 10 == 0:
-            loss_sum = loss_sum / (BATCH_SIZE * 10)
-            print('Run: ', run, '\tLoss Average: ', loss_sum)
+        if (run * BATCH_SIZE) % 100 == 0:
+            loss_sum = loss_sum / 100
+            print('Run: ', run * BATCH_SIZE, '\tLoss Average: ', loss_sum)
             writer.add_scalar(tag='avg_training_loss',
                               scalar_value=loss_sum,
-                              global_step=run)
+                              global_step=run * BATCH_SIZE)
             loss_sum = 0
 
-        if run % 100 == 0:
-            test(run, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
+        if (run * BATCH_SIZE) % 1000 == 0:
+            test(run * BATCH_SIZE, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
 
         loss.backward()
         optimizer.step()

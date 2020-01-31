@@ -1,14 +1,11 @@
 from time import time
 import torch
-from data import load_dataset
 import numpy as np
 from nn import Net
 import datetime
-from torch.utils.tensorboard import SummaryWriter
-from train import RUN_NAME
 
 
-def test(run=0, s_test=load_dataset('train'), s_db=load_dataset('db'), writer=SummaryWriter('runs/' + RUN_NAME)):
+def test(run, s_test, s_db, writer):
     start_t = time()
     print('\nTesting')
 
