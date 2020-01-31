@@ -18,7 +18,7 @@ def train():
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs/train')
+    writer = SummaryWriter('runs/r1000b25dm')
 
     # Load data
     datasets = load_dataset('all')
@@ -30,7 +30,10 @@ def train():
     optimizer = optim.Adam(net.parameters(), lr=1e-3)
 
     for run in range(1, RUNS + 1):
-        torch.save(net.state_dict(), f='state_dict.pth')
+        try:
+            torch.save(net.state_dict(), f='state_dict.pth')
+        except OSError:
+            print('Wasn\'t able to save State dict')
 
         batch = generate_triplet_batch(s_train, s_db, BATCH_SIZE)
         results = list()
@@ -40,7 +43,7 @@ def train():
         for i in batch:
             results.append(net(i[0].view(1, 3, 64, 64)))
 
-        loss = l_triplets(results, s_train) + l_pairs(results)
+        loss = l_triplets(results, batch) + l_pairs(results)
 
         if run % 10 == 0:
             print('Run: ', run, '\tLoss: ', float(loss))

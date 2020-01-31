@@ -11,7 +11,7 @@ def test(run=0, s_test=None, s_db=None):
     start_t = time()
     print('\nTesting')
 
-    writer = SummaryWriter('runs/eval')
+    writer = SummaryWriter('runs/r1000b25dm')
 
     # Load data
     if s_test is None:

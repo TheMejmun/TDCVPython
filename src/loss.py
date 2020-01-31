@@ -2,14 +2,14 @@ import numpy as np
 import torch.functional as F
 
 
-# If s_train is set, switch to dynamic margin
-def l_triplets(t, s_train=None, margin=0.01):
+# If batch is set, switch to dynamic margin
+def l_triplets(t, batch=None, margin=0.01):
     out = 0
     for i in range(len(t) // 3):
 
-        if s_train is not None:
-            margin = __dynamic_margin(s_train[i * 3], s_train[i * 3 + 2])
-            print('Dynamic margin: ', margin)
+        if batch is not None:
+            margin = __dynamic_margin(batch[i * 3], batch[i * 3 + 2])
+            # print('Dynamic margin: ', margin)
 
         x = 1 - (F.norm(t[i * 3] - t[i * 3 + 2]) ** 2) / (F.norm(t[i * 3] - t[i * 3 + 1]) ** 2 + margin)
         if x > 0: out += x
