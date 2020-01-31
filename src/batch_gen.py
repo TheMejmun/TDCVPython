@@ -28,7 +28,8 @@ def __find_nn(a, b_set):
 
             # Angular distance
             # Formula given in exercise
-            d = 2 * np.arccos(np.abs(np.dot(b[2], a[2])))
+            # Clip added to prevent NaNs
+            d = 2 * np.arccos(np.clip(np.abs(np.dot(b[2], a[2])), a_min=-1, a_max=1))
             if d < match_d:
                 match = b
                 match_d = d

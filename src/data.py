@@ -4,6 +4,7 @@ import glob
 import re
 import os
 from norm import normalize
+import torch
 
 # TODO put dataset folder into project root
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -19,7 +20,7 @@ def __load_image(path):
 # class_name is the name of the subfolder ('ape', 'cat',...)
 #
 # Returns a list of tuples
-# return[0] is raw image data
+# return[0] is normalized image data
 # return[1] is the class name
 # return[2] is a np array with given pose data
 # return[3] is file name with path
@@ -31,8 +32,9 @@ def __load_folder(folder, class_name):
     for f in glob.iglob(path + '*'):
         # Is image
         if re.match('.*\.png$', f):
-            # Put images into dict with file name (without path) as index
-            image_dict[f[len(path):]] = normalize(__load_image(f))
+            # Put images into dict with file name (without path) as index. Images get normalized, then converted to
+            # PyTorch tensors, then permuted to (Channels, Height, Width)
+            image_dict[f[len(path):]] = torch.from_numpy(normalize(__load_image(f))).permute((2, 0, 1))
 
     out = list()
 
@@ -60,7 +62,7 @@ def __load_folder(folder, class_name):
 # set mode to 'all', 'test', 'train', or 'db'
 # 'all' returns a dict of all datasets
 # everything else returns a list of tuples where:
-# return[0] is raw image data
+# return[0] is normalized image data
 # return[1] is the class name
 # return[2] is a np array with given pose data
 # return[3] is file name with path
