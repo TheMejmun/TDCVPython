@@ -16,15 +16,14 @@ BATCH_SIZE = 50
 
 def train():
     start_t = time()
-    print('Training')
+    print('\nTraining')
 
-    print('CUDA is available' if torch.cuda.is_available() else 'CUDA is NOT available')
-
-    writer = SummaryWriter('runs/test')
+    writer = SummaryWriter('runs/train')
 
     # Load data
-    s_train = load_dataset('train')
-    s_db = load_dataset('db')
+    datasets = load_dataset('all')
+    s_train = datasets['train']
+    s_db = datasets['db']
 
     # Load NN
     net = Net().double()
@@ -49,14 +48,14 @@ def train():
                               global_step=run)
 
         if run % 1000 == 0:
-            test()
+            test(run, s_test=datasets['test'], s_db=datasets['db'])
 
         loss.backward()
         optimizer.step()
 
         torch.save(net.state_dict(), 'state_dict')
 
-    print('Finished in ', round(time() - start_t, 2), 's')
+    print('Finished in ', round(time() - start_t, 2), 's\n')
 
 
 if __name__ == '__main__':  # Only execute if called

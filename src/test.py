@@ -4,26 +4,27 @@ from data import load_dataset
 import numpy as np
 from nn import Net
 from torch.utils.tensorboard import SummaryWriter
-import torchvision
-import matplotlib.pyplot as plt
 
 
-def test(run=0):
+def test(run=0, s_test=None, s_db=None):
     start_t = time()
-    print('Testing')
+    print('\nTesting')
 
-    print('CUDA is available' if torch.cuda.is_available() else 'CUDA is NOT available')
-
-    writer = SummaryWriter('runs/test')
+    writer = SummaryWriter('runs/eval')
 
     # Load data
-    s_test = load_dataset('train')
-    s_db = load_dataset('db')
+    if s_test is None:
+        s_test = load_dataset('train')
+    if s_db is None:
+        s_db = load_dataset('db')
 
     # Load NN
     print('Loading NN')
     net = Net().double()
-    net.load_state_dict(torch.load('state_dict'))
+    try:
+        net.load_state_dict(torch.load('state_dict'))
+    except FileNotFoundError:
+        print('State dict not found')
     net.eval()
 
     # Get results for everything in s_test and s_db
@@ -38,17 +39,18 @@ def test(run=0):
     # TODO replace with library
     print('Finding closest matches')
     matches = list()
-    for x in results_test:
+    for i_x in range(len(s_test)):
         match = None
         match_d = float('inf')
-        for y in results_db:
-            d = np.linalg.norm(y - x)
+        for i_y in range(len(s_db)):
+            d = np.linalg.norm(results_db[i_y] - results_test[i_x])
             if d < match_d:
                 match_d = d
-                match = y
+                match = i_y
 
-        matches.append((x, match))
+        matches.append((s_test[i_x], s_db[match]))
 
+    print('Evaluating matches')
     class_match_count = 0
     # How many matches are within 10, 20, 40, and 180 degrees
     lt10 = lt20 = lt40 = lt180 = 0
@@ -86,6 +88,6 @@ def test(run=0):
                       scalar_value=lt180 / len(s_test),
                       global_step=run)
 
-    print('Finished in ', round(time() - start_t, 2), 's')
+    print('Finished in ', round(time() - start_t, 2), 's\n')
 
     return
