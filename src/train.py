@@ -12,14 +12,14 @@ from test import test
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
 RUNS = 300000 // BATCH_SIZE
-RUN_NAME = 'b25_dmpi_br0.4'
+RUN_NAME = '300k_b25_dmpi_br0.75'
 
 
 def train():
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs2/' + RUN_NAME)
+    writer = SummaryWriter('runs3/' + RUN_NAME)
 
     # Load data
     datasets = load_dataset('all')
@@ -57,7 +57,7 @@ def train():
                               global_step=run * BATCH_SIZE)
             loss_sum = 0
 
-        if (run * BATCH_SIZE) % 1000 == 0:
+        if (run * BATCH_SIZE) % 10000 == 0:
             test(run * BATCH_SIZE, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
 
         loss.backward()
