@@ -11,8 +11,8 @@ from test import test
 
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
-RUNS = 100000 // BATCH_SIZE
-RUN_NAME = 'r10000b25dmpi'
+RUNS = 300000 // BATCH_SIZE
+RUN_NAME = 'b25_dmpi_br0.4'
 
 
 def train():
