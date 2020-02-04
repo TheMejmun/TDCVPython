@@ -11,15 +11,16 @@ from test import test
 
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
-RUNS = 300000 // BATCH_SIZE
-RUN_NAME = '300k_b25_dmpi_br0.75'
+# Number of total batches trained on
+RUNS = 10000 // BATCH_SIZE
+RUN_NAME = 'n2_10k_b25_dmpi_br0.75'
 
 
 def train():
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs3/' + RUN_NAME)
+    writer = SummaryWriter('runs_new/' + RUN_NAME)
 
     # Load data
     datasets = load_dataset('all')
