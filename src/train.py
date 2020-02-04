@@ -32,10 +32,8 @@ def train():
 
     loss_sum = 0
     for run in range(1, RUNS + 1):
-        try:
-            torch.save(net.state_dict(), f='state_dict.pth')
-        except OSError:
-            print('Wasn\'t able to save State dict')
+        # Save state_dict
+        net.store()
 
         batch = generate_triplet_batch(s_train, s_db, BATCH_SIZE)
         results = list()

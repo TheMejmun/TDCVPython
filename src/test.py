@@ -12,10 +12,8 @@ def test(run, s_test, s_db, writer):
     # Load NN
     print('Loading NN')
     net = Net().double()
-    try:
-        net.load_state_dict(torch.load('state_dict.pth'))
-    except FileNotFoundError:
-        print('State dict not found')
+    # Load state dict
+    net.load()
     net.eval()
 
     # Get results for everything in s_test and s_db

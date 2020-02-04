@@ -26,18 +26,6 @@ class Net(nn.Module):
 
         return x
 
-    def load(self):
-        try:
-            self.load_state_dict(torch.load('state_dict.pth'))
-        except FileNotFoundError:
-            print('State dict not found')
-
-    def store(self):
-        try:
-            torch.save(self.state_dict(), f='state_dict.pth')
-        except OSError:
-            print('Wasn\'t able to save State dict')
-
 
 # TESTING
 if __name__ == '__main__':  # Only execute if called
