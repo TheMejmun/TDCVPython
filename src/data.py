@@ -1,10 +1,12 @@
-from PIL import Image as I
-import numpy as np
 import glob
-import re
 import os
-from norm import normalize
+import re
+
+import numpy as np
 import torch
+from PIL import Image as I
+
+from norm import normalize
 
 # TODO put dataset folder into project root
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -67,7 +69,6 @@ def __load_folder(folder, class_name):
 # return[2] is a np array with given pose data
 # return[3] is file name with path
 def load_dataset(mode='all'):
-
     classes = ['ape', 'benchvise', 'cam', 'cat', 'duck']
     # Split string with ', ' and put casted ints into list
     training_split = [int(i) for i in open(ROOT_DIR + '\\dataset\\real\\training_split.txt').read().split(sep=', ')]

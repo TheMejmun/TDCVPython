@@ -1,11 +1,13 @@
-from time import time
-import torch
-import numpy as np
-from nn import Net
 import datetime
+from time import time
+
+import numpy as np
+
+from data import load_dataset
+from nn import Net
 
 
-def test(run, s_test, s_db, writer):
+def test(s_test, s_db, run=0, writer=None):
     start_t = time()
     print('\nTesting')
 
@@ -61,17 +63,29 @@ def test(run, s_test, s_db, writer):
             if degrees < 180:
                 lt180 += 1
 
-    writer.add_scalar(tag='match_within_10_degrees',
-                      scalar_value=lt10 / len(s_test),
-                      global_step=run)
-    writer.add_scalar(tag='match_within_20_degrees',
-                      scalar_value=lt20 / len(s_test),
-                      global_step=run)
-    writer.add_scalar(tag='match_within_40_degrees',
-                      scalar_value=lt40 / len(s_test),
-                      global_step=run)
-    writer.add_scalar(tag='match_within_180_degrees',
-                      scalar_value=lt180 / len(s_test),
-                      global_step=run)
+    if writer is not None:
+        writer.add_scalar(tag='match_within_10_degrees',
+                          scalar_value=lt10 / len(s_test),
+                          global_step=run)
+        writer.add_scalar(tag='match_within_20_degrees',
+                          scalar_value=lt20 / len(s_test),
+                          global_step=run)
+        writer.add_scalar(tag='match_within_40_degrees',
+                          scalar_value=lt40 / len(s_test),
+                          global_step=run)
+        writer.add_scalar(tag='match_within_180_degrees',
+                          scalar_value=lt180 / len(s_test),
+                          global_step=run)
+    else:
+        print()
+        print('Matches within 10 degrees:\t', lt10, '/', len(s_test), '\tRatio:', lt10 / len(s_test))
+        print('Matches within 20 degrees:\t', lt20, '/', len(s_test), '\tRatio:', lt20 / len(s_test))
+        print('Matches within 40 degrees:\t', lt40, '/', len(s_test), '\tRatio:', lt40 / len(s_test))
+        print('Matches within 180 degrees:\t', lt180, '/', len(s_test), '\tRatio:', lt180 / len(s_test))
+        print()
 
     print('Finished in ', str(datetime.timedelta(seconds=time() - start_t)), 's\n')
+
+
+if __name__ == '__main__':  # Only execute if called
+    test(s_test=load_dataset('test'), s_db=load_dataset('db'))

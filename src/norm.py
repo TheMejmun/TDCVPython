@@ -2,7 +2,7 @@ import numpy as np
 
 
 def __zero_mean(image):
-    mean=np.mean(image, axis=(0, 1))
+    mean = np.mean(image, axis=(0, 1))
     # print('Mean: ', mean)
     return image - mean
 

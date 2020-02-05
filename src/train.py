@@ -1,12 +1,13 @@
+import datetime
 from time import time
-import torch
-from data import load_dataset
-from batch_gen import generate_triplet_batch
-from nn import Net
-from loss import *
+
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
-import datetime
+
+from batch_gen import generate_triplet_batch
+from data import load_dataset
+from loss import *
+from nn import Net
 from test import test
 
 # batch size gets multiplied by 3 later
@@ -60,7 +61,7 @@ def train(run_start=1):
             loss_sum = 0
 
         if (run * BATCH_SIZE) % 10000 == 0:
-            test(run * BATCH_SIZE, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
+            test(run=run * BATCH_SIZE, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
 
         loss.backward()
         optimizer.step()

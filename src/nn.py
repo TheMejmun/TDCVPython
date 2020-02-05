@@ -1,6 +1,6 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch
 
 
 class Net(nn.Module):
@@ -36,10 +36,3 @@ class Net(nn.Module):
             torch.save(self.state_dict(), f='state_dict.pth')
         except OSError:
             print('Wasn\'t able to save State dict')
-
-
-# TESTING
-if __name__ == '__main__':  # Only execute if called
-    import torch
-
-    torch.tensor()
