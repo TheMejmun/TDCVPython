@@ -86,7 +86,7 @@ def test(s_test, s_db, run=0, writer=None):
     for real_label in ('ape', 'benchvise', 'cam', 'cat', 'duck'):
         print('\n', real_label[:3], end='\t')
         for predicted_label in ('ape', 'benchvise', 'cam', 'cat', 'duck'):
-            print(np.around(confusion_matrix[real_label][predicted_label]/(len(s_test)/5),2), end='\t')
+            print(str(np.around(confusion_matrix[real_label][predicted_label] / (len(s_test) / 5), 2))[1:], end='\t')
     print('\nre/pr\t', end='')
     for predicted_label in ('ape', 'benchvise', 'cam', 'cat', 'duck'):
         print(predicted_label[:3], end='\t')
