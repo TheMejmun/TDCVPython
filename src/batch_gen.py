@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 
-def generate_triplet_batch(s_train, s_db, batch_size, pusher_same_class_ratio=0.75):
+def generate_triplet_batch(s_train, s_db, batch_size, pusher_same_class_ratio=0.85):
     batch = list()
 
     for i in range(batch_size):

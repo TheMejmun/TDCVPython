@@ -13,7 +13,7 @@ from test import test
 BATCH_SIZE = 25
 # Number of total batches trained on
 RUNS = 10000 // BATCH_SIZE
-RUN_NAME = 'n_10k_b25_dmpi_br0.75_lr1e-5'
+RUN_NAME = 'n_10k_b25_dmpi_br0.85_lr1e-4'
 
 
 def train():
@@ -29,7 +29,7 @@ def train():
 
     # Load NN
     net = Net().double()
-    optimizer = optim.Adam(net.parameters(), lr=1e-5)
+    optimizer = optim.Adam(net.parameters(), lr=1e-4)
 
     loss_sum = 0
     for run in range(1, RUNS + 1):
