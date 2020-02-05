@@ -14,7 +14,7 @@ def generate_triplet_batch(s_train, s_db, batch_size, pusher_same_class_ratio=0.
 
         # Depending on input ratio and iteration, set pusher to same or different class
         if i < int(batch_size * pusher_same_class_ratio):
-            pusher = random.choice([x for x in s_db if anchor[1] == x[1]])
+            pusher = random.choice([x for x in s_db if anchor[1] == x[1] and x[3] != puller[3]])
         else:
             pusher = random.choice([x for x in s_db if not anchor[1] == x[1]])
 

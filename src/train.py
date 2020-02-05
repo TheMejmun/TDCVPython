@@ -13,15 +13,15 @@ from test import test
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
 # Number of total batches trained on
-RUNS = 1000000 // BATCH_SIZE
-RUN_NAME = 'n_1m_b25_dmpi_br0.85_lr1e-4'
+RUNS = 10000 // BATCH_SIZE
+RUN_NAME = 'n2_10k_b25_dmpi_br0.85_lr1e-3_bn'
 
 
 def train(run_start=1):
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs_1m/' + RUN_NAME)
+    writer = SummaryWriter('runs_new/' + RUN_NAME)
 
     # Load data
     datasets = load_dataset('all')
@@ -33,7 +33,7 @@ def train(run_start=1):
     # Resume training if not started from 1
     if run_start != 1:
         net.load()
-    optimizer = optim.Adam(net.parameters(), lr=1e-4)
+    optimizer = optim.Adam(net.parameters(), lr=1e-3)
 
     loss_sum = 0
     for run in range(run_start, RUNS + 1):
