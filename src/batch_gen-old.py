@@ -42,20 +42,3 @@ def __find_nn(a, b_set):
 
 def __angular_distance(a, b):
     return 2 * np.arccos(np.clip(np.abs(np.dot(a, b)), a_min=-1, a_max=1))
-
-
-# TESTING
-if __name__ == '__main__':  # Only execute if called
-    from data import load_dataset, __load_image
-    from PIL import Image
-
-    s_test = load_dataset('test')
-    s_db = load_dataset('db')
-    batch = generate_triplet_batch(s_test, s_db, 6)
-
-    Image.fromarray(__load_image(batch[0][3])).show(title='Anchor')
-    Image.fromarray(__load_image(batch[1][3])).show(title='Puller')
-    Image.fromarray(__load_image(batch[2][3])).show(title='Pusher')
-
-    # print(2 * np.arccos(1))
-    # print(2 * np.arccos(-1))

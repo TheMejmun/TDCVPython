@@ -90,7 +90,7 @@ def test(s_test, s_db, run=0, writer=None):
     print('\nre/pr\t', end='')
     for predicted_label in ('ape', 'benchvise', 'cam', 'cat', 'duck'):
         print(predicted_label[:3], end='\t')
-    print()
+    print('\n')
 
     if writer is not None:
         writer.add_scalar(tag='match_within_10_degrees',

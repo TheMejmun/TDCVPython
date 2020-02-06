@@ -9,65 +9,69 @@ from data import load_dataset
 from loss import *
 from nn import Net
 from test import test
+from triplet_dataset import TripletDataset
+from torch.utils.data import DataLoader
 
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
-# Number of total batches trained on
-RUNS = 10000 // BATCH_SIZE
-RUN_NAME = 'n2_10k_b25_dmpi_br0.85_lr1e-3_bn'
+RUN_NAME = 'b25_dmpi_br0.85_lr1e-3_bn_xn_dl'
+EPOCHS = 64
 
 
-def train(run_start=1):
+def train(epoch=0, dynamic_margin=True, run_name=RUN_NAME):
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs_new/' + RUN_NAME)
+    writer = SummaryWriter('runs' + run_name)
 
     # Load data
     datasets = load_dataset('all')
-    s_train = datasets['train']
-    s_db = datasets['db']
+    dataset = TripletDataset(s_train=datasets['train'], s_db=datasets['db'], pusher_ratio=0.85)
+    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
     # Load NN
     net = Net().double()
-    # Resume training if not started from 1
-    if run_start != 1:
-        net.load()
     optimizer = optim.Adam(net.parameters(), lr=1e-3)
 
-    loss_sum = 0
-    for run in range(run_start, RUNS + 1):
-        # Save state_dict
-        net.store()
+    exec = 0
+    for epoch in range(epoch, EPOCHS):
 
-        batch = generate_triplet_batch(s_train, s_db, BATCH_SIZE)
-        results = list()
+        for i_anchors, i_pullers, i_pushers, anchors, pullers, pushers in dataloader:
 
-        optimizer.zero_grad()
+            # Save state_dict
+            net.store()
 
-        for i in batch:
-            results.append(net(i[0].view(1, 3, 64, 64)))
-
-        loss = l_triplets(results, batch) + l_pairs(results)
-        # loss = l_triplets(results) + l_pairs(results)
-        loss_sum += float(loss)
-
-        if (run * BATCH_SIZE) % 100 == 0:
-            loss_sum = loss_sum / 100
-            print('Run: ', run * BATCH_SIZE, '\tLoss Average: ', loss_sum)
-            writer.add_scalar(tag='avg_training_loss',
-                              scalar_value=loss_sum,
-                              global_step=run * BATCH_SIZE)
             loss_sum = 0
+            optimizer.zero_grad()
 
-        if (run * BATCH_SIZE) % 10000 == 0:
-            test(run=run * BATCH_SIZE, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
+            # Calculate descriptors
+            o_anchors, o_pullers, o_pushers = net(i_anchors), net(i_pullers), net(i_pushers)
 
-        loss.backward()
-        optimizer.step()
+            if dynamic_margin:
+                loss = l_triplets(o_anchors, o_pullers, o_pushers, anchors, pushers) + l_pairs(o_anchors, o_pullers)
+            else:
+                loss = l_triplets(o_anchors, o_pullers, o_pushers) + l_pairs(o_anchors, o_pullers)
+            loss_sum += float(loss)
+
+            if exec % 10 == 0:
+                loss_sum = loss_sum / (BATCH_SIZE * 10)
+                print('Epoch: ', epoch, '\tIteration: ', exec, '\tLoss Average: ', loss_sum)
+                writer.add_scalar(tag='avg_training_loss',
+                                  scalar_value=loss_sum,
+                                  global_step=exec)
+                loss_sum = 0
+
+            if exec % 1000 == 0:
+                test(run=exec, s_test=datasets['test'], s_db=datasets['db'], writer=writer)
+
+            loss.backward()
+            optimizer.step()
+
+            exec += 1
 
     print('Finished in ', str(datetime.timedelta(seconds=time() - start_t)), 's\n')
 
 
 if __name__ == '__main__':  # Only execute if called
-    train()
+    train(dynamic_margin=True, run_name='b25_dmpi_br0.85_lr1e-3_bn_xn_dl')
+    train(dynamic_margin=True, run_name='b25_sm0.01_br0.85_lr1e-3_bn_xn_dl')
