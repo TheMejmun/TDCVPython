@@ -4,7 +4,6 @@ from time import time
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 
-from batch_gen import generate_triplet_batch
 from data import load_dataset
 from loss import *
 from nn import Net
