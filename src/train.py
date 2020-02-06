@@ -14,14 +14,14 @@ from torch.utils.data import DataLoader
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
 RUN_NAME = 'b25_dmpi_br0.85_lr1e-3_bn_xn_dl'
-EPOCHS = 64
+EPOCHS = 32
 
 
 def train(epoch=0, dynamic_margin=True, run_name=RUN_NAME):
     start_t = time()
     print('\nTraining')
 
-    writer = SummaryWriter('runs' + run_name)
+    writer = SummaryWriter('runs/' + run_name)
 
     # Load data
     datasets = load_dataset('all')
@@ -72,5 +72,4 @@ def train(epoch=0, dynamic_margin=True, run_name=RUN_NAME):
 
 
 if __name__ == '__main__':  # Only execute if called
-    train(dynamic_margin=True, run_name='b25_dmpi_br0.85_lr1e-3_bn_xn_dl')
-    train(dynamic_margin=True, run_name='b25_sm0.01_br0.85_lr1e-3_bn_xn_dl')
+    train()
