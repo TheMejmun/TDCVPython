@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 
 # batch size gets multiplied by 3 later
 BATCH_SIZE = 25
-RUN_NAME = 'b25_dmpi_br0.85_lr1e-3_bn_xn_dl'
+RUN_NAME = 'b25_dmpi_br0.85_lr1e-3_bn_dl'
 EPOCHS = 32
 
 
